@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@RestController(value = "/users")
 public class UserController {
     private final UserService userService;
 
@@ -18,45 +18,33 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(value = "/users")
+    @PostMapping()
     public ResponseEntity<?> create(@RequestBody User user) {
-        userService.create(user);
+        userService.save(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/users")
+    @GetMapping()
     public ResponseEntity<List<User>> read() {
-        final List<User> clients = userService.readAll();
-
-        return clients != null && !clients.isEmpty()
-                ? new ResponseEntity<>(clients, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        final List<User> users = userService.findAll();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/users/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<User> read(@PathVariable(name = "id") Long id) {
-        final User user = userService.read(id);
-
-        return user != null
-                ? new ResponseEntity<>(user, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        final User user = userService.findById(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/users/{id}")
+    @PutMapping(value = "/{id}")
     public ResponseEntity<?> update(@PathVariable(name = "id") Long id, @RequestBody User user) {
-        final boolean updated = userService.update(user, id);
-
-        return updated
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        userService.update(user, id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/users/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
-        final boolean deleted = userService.delete(id);
-
-        return deleted
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        userService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

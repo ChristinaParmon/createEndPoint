@@ -5,13 +5,29 @@ import com.example.springendpoint.models.User;
 import java.util.List;
 
 public interface UserService {
-    void create(User user);
+    /**
+     * @param user
+     */
+    void save(User user);
 
-    List<User> readAll();
+    /**
+     * @return List<User>
+     */
+    List<User> findAll();
 
-    User read(Long id);
+    /**
+     * @param id
+     * @return User
+     */
+    User findById(Long id);
 
-    boolean update(User client, Long id);
+    /**
+     * @param client, id
+     */
+    void update(User client, Long id);
 
-    boolean delete(Long id);
+    /**
+     * @param id
+     */
+    void deleteById(Long id);
 }

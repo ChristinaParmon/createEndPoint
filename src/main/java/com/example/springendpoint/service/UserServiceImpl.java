@@ -3,9 +3,12 @@ package com.example.springendpoint.service;
 import com.example.springendpoint.models.User;
 import com.example.springendpoint.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -14,37 +17,42 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public void create(User user) {
-        userRepository.save(user);
+    public void save(User user) {
+        Optional.ofNullable(user)
+                .map(userRepository::save);
     }
 
     @Override
-    public List<User> readAll() {
+    public List<User> findAll() {
         return userRepository.findAll();
     }
 
     @Override
-    public User read(Long id) {
-        return userRepository.getReferenceById(id);
+    public User findById(Long id) {
+        return Optional.ofNullable(id)
+                .flatMap(userRepository::findById)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @Override
-    public boolean update(User client, Long id) {
-        if (userRepository.existsById(id)) {
-            client.setId(id);
-            userRepository.save(client);
-            return true;
-        }
+    public void update(User client, Long id) {
+        Optional.ofNullable(id)
+                .filter(userRepository::existsById)
+                .map(it -> {
+                    client.setId(it);
+                    return userRepository.save(client);
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        return false;
     }
 
     @Override
-    public boolean delete(Long id) {
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void deleteById(Long id) {
+        Optional.ofNullable(id)
+                .filter(userRepository::existsById)
+                .ifPresentOrElse(userRepository::deleteById, () -> {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                });
+
     }
 }
