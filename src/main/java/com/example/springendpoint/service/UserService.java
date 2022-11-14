@@ -1,30 +1,30 @@
 package com.example.springendpoint.service;
 
-import com.example.springendpoint.models.User;
+import com.example.springendpoint.dto.UserDto;
 
 import java.util.List;
 
 public interface UserService {
     /**
-     * @param user
+     * @param userDto
      */
-    void save(User user);
+    void save(UserDto userDto);
 
     /**
-     * @return List<User>
+     * @return List<UserDto>
      */
-    List<User> findAll();
+    List<UserDto> findAll();
 
     /**
      * @param id
-     * @return User
+     * @return UserDto
      */
-    User findById(Long id);
+    UserDto findById(Long id);
 
     /**
-     * @param client, id
+     * @param userDto, id
      */
-    void update(User client, Long id);
+    void update(UserDto userDto, Long id);
 
     /**
      * @param id

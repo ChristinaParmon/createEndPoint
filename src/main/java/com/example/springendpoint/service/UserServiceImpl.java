@@ -1,5 +1,7 @@
 package com.example.springendpoint.service;
 
+import com.example.springendpoint.dto.UserDto;
+import com.example.springendpoint.mapper.UserMapper;
 import com.example.springendpoint.models.User;
 import com.example.springendpoint.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,32 +17,37 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
-    public void save(User user) {
-        Optional.ofNullable(user)
+    public void save(UserDto userDto) {
+        Optional.ofNullable(userDto)
+                .map(userMapper::toEntity)
                 .map(userRepository::save);
     }
 
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserDto> findAll() {
+        List<User> all = userRepository.findAll();
+        return userMapper.toDtos(all);
     }
 
     @Override
-    public User findById(Long id) {
+    public UserDto findById(Long id) {
         return Optional.ofNullable(id)
                 .flatMap(userRepository::findById)
+                .map(userMapper::toDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @Override
-    public void update(User client, Long id) {
+    public void update(UserDto userDto, Long id) {
         Optional.ofNullable(id)
                 .filter(userRepository::existsById)
                 .map(it -> {
-                    client.setId(it);
-                    return userRepository.save(client);
+                    User user = userMapper.toEntity(userDto);
+                    user.setId(it);
+                    return userRepository.save(user);
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
