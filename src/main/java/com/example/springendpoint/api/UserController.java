@@ -19,33 +19,33 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping()
-    public ResponseEntity<?> save(@RequestBody UserDto userDto) {
+    @PostMapping
+    public ResponseEntity<UserDto> save(@RequestBody UserDto userDto) {
         userService.save(userDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.ok(userDto);
     }
 
-    @GetMapping()
-    public ResponseEntity<List<UserDto>> findAll() {
-        final List<UserDto> users = userService.findAll();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<UserDto>> findAll(@RequestParam(required = false, defaultValue = "0") final Integer page,
+                                                 @RequestParam(required = false, defaultValue = "5") final Integer size,
+                                                 @RequestParam(required = false, defaultValue = "id") final String sort) {
+        return ResponseEntity.ok(userService.findAll(page, size, sort));
     }
 
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserDto> findById(@PathVariable(name = "id") Long id) {
-        final UserDto userDto = userService.findById(id);
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+        return ResponseEntity.ok(userService.findById(id));
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@PathVariable(name = "id") Long id, @RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> update(@PathVariable(name = "id") Long id, @RequestBody UserDto userDto) {
         userService.update(userDto, id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(userDto);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<UserDto> deleteById(@PathVariable(name = "id") Long id) {
         userService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

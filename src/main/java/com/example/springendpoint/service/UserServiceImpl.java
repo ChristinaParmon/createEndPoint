@@ -5,12 +5,16 @@ import com.example.springendpoint.mapper.UserMapper;
 import com.example.springendpoint.models.User;
 import com.example.springendpoint.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -27,9 +31,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> findAll() {
-        List<User> all = userRepository.findAll();
-        return userMapper.toDtos(all);
+    public List<UserDto> findAll(Integer page, Integer size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return userRepository.findAll(pageable).stream().map(userMapper::toDto).collect(Collectors.toList());
+
     }
 
     @Override

@@ -11,9 +11,10 @@ public interface UserService {
     void save(UserDto userDto);
 
     /**
+     * @param page, size, sort
      * @return List<UserDto>
      */
-    List<UserDto> findAll();
+    List<UserDto> findAll(Integer page, Integer size, String sort);
 
     /**
      * @param id

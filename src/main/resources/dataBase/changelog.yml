@@ -1,0 +1,6 @@
+databaseChangeLog:
+  - include:
+      file: dataBase/v1/initDB.sql
+
+  - include:
+      file: dataBase/v1/populateDB.sql
