@@ -31,4 +31,6 @@ public class User implements Serializable {
     @Column(name = "phone")
     @NotBlank(message = "You can't leave this field blank")
     private String phone;
+    @Column(name = "photo")
+    private String photoId;
 }
