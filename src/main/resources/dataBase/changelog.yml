@@ -2,8 +2,7 @@ databaseChangeLog:
   - include:
       file: dataBase/v1/db.changelog-1.sql
 
-  - include:
-      file: dataBase/v1/db.changelog-2.sql
+
 
   - include:
-      file: dataBase/v1/db.changelog-3.sql
+      file: dataBase/v1/db.changelog-4.sql

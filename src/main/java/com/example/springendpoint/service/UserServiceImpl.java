@@ -19,13 +19,12 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    @Transactional
     @Override
     public void save(UserDto userDto) {
         Optional.ofNullable(userDto)
@@ -33,6 +32,7 @@ public class UserServiceImpl implements UserService {
                 .map(userRepository::save);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<UserDto> findAll(Integer page, Integer size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
@@ -40,6 +40,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserDto findById(Long id) {
         return Optional.ofNullable(id)
@@ -48,7 +49,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @Transactional
     @Override
     public void update(UserDto userDto, Long id) {
         Optional.ofNullable(id)
@@ -62,7 +62,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Transactional
     @Override
     public void deleteById(Long id) {
         Optional.ofNullable(id)
