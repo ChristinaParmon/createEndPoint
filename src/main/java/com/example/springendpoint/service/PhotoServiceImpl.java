@@ -16,7 +16,7 @@ public class PhotoServiceImpl implements PhotoService {
     private final PhotoRepository photoRepository;
 
     @Override
-    public String addPhoto(String title, MultipartFile file) throws IOException {
+    public String addPhoto(MultipartFile file) throws IOException {
         Photo photo = new Photo();
         photo.setImage(
                 new Binary(BsonBinarySubType.BINARY, file.getBytes()));
@@ -24,8 +24,4 @@ public class PhotoServiceImpl implements PhotoService {
         return photo.getId();
     }
 
-    @Override
-    public Photo getPhoto(String id) {
-        return photoRepository.findById(id).get();
-    }
 }
