@@ -25,6 +25,15 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
+    @PostMapping(value = "/{userId}/{photoId}")
+    public ResponseEntity<UserDto> savePhoto(@PathVariable(name = "userId") Long userId,
+                                             @PathVariable(name = "photoId") String photoId) {
+        UserDto userDto = userService.findById(userId);
+        userDto.setPhotoId(photoId);
+        userService.update(userDto, userId);
+        return ResponseEntity.ok(userDto);
+    }
+
     @GetMapping
     public ResponseEntity<List<UserDto>> findAll(@RequestParam(required = false, defaultValue = "0") final Integer page,
                                                  @RequestParam(required = false, defaultValue = "5") final Integer size,
